@@ -1,7 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_auth/screens/authentication.dart';
 
-class logIN extends StatelessWidget {
+// ignore: camel_case_types
+class logIN extends StatefulWidget {
   const logIN({super.key});
+
+  @override
+  State<logIN> createState() => _logINState();
+}
+
+class _logINState extends State<logIN> {
+  final _Auth = AuthenticationServices();
+
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _email.dispose();
+    _password.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +37,8 @@ class logIN extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            const TextField(
+            TextField(
+              controller: _email,
               keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -28,7 +48,8 @@ class logIN extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            const TextField(
+            TextField(
+              controller: _password,
               keyboardType: TextInputType.visiblePassword,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -43,14 +64,36 @@ class logIN extends StatelessWidget {
                   backgroundColor:
                       WidgetStatePropertyAll<Color>(Colors.blueAccent),
                 ),
-                onPressed: () {},
+                onPressed: _logIN,
                 child: const Text(
                   'login',
                   style: TextStyle(color: Colors.white),
-                ))
+                )),
+            const SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Dont have an account ? '),
+                SizedBox(
+                  width: 1,
+                ),
+                TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Sing Up',
+                      style: TextStyle(color: Colors.blueAccent),
+                    ))
+              ],
+            )
           ],
         )),
       ),
     );
+  }
+
+  _logIN() async {
+    await _Auth.loginUserWithEmailAndPassword(_email.text, _password.text);
   }
 }
